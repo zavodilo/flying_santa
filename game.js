@@ -1,5 +1,23 @@
+var game = new Phaser.Game(800, 640, Phaser.AUTO, 'gameDiv');
 
-window.onload = function () {
+game.global = {
+    score: 0
+};
+
+game.state.add('boot', bootState);
+game.state.add('load', loadState);
+game.state.add('menu', menuState);
+game.state.add('play', playState);
+
+game.state.start('boot');
+
+
+
+//window.onload = function () {
+
+
+
+    /*
     var xScene = 800; //сделать константой
     var yScene = 640; //сделать константой
 
@@ -192,11 +210,7 @@ window.onload = function () {
     }
 
     function playerControls() {
-        /*
-        if (pauseKey.up.isDown) {
-            pause();
-        }
-*/
+
 
         game.physics.arcade.collide(player, platforms);
         game.physics.arcade.collide(player, grounds);
@@ -331,4 +345,5 @@ window.onload = function () {
         particle.body.velocity.x = max - Math.floor(Math.random() * 30);
 
     }
-};
+    */
+//};

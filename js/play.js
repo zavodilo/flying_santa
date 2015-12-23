@@ -1,11 +1,16 @@
 var playState = {
+    score: 0,
+    scoreLabel: null,
     player: null,
     platforms: null,
     cursors: null,
     prizeButton: null,
     grounds: null,
+    clouds: null,
     prize: null,
-
+    houses: null,
+    airplanes: null,
+    balloons: null,
 
     //snow
     max: 0,
@@ -17,9 +22,27 @@ var playState = {
 
 
     game_over: function () {
-        alert('GAME OVER!');
+        game.paused = true;
+        //alert('GAME OVER!');
+        /*
+        label = game.add.text(game.world.width / 2 ,game.world.height / 2, 'Score: '+score+'\nGAME OVER\nPress SPACE to restart',{ font: '22px Lucida Console', fill: '#fff', align: 'center'});
+        label.anchor.setTo(0.5, 0.5);
+        */
+        //game.state.restart();
+
+        var game_over_label = game.add.text(game.world.width / 2 , game.world.height / 2, 'GAME OVER\nClick to restart\nScore: ' + this.score, {font: '24px Arial', fill: '#f00'});
+        //game_over_label.inputEnabled = true;
+        //game_over_label.events.onInputUp.add(this.restartGame);
+        //this.pauseGame();
         game.state.restart();
+
     },
+    /*
+    restartGame: function () {
+        //game.paused = false;
+        //game.state.start('play');
+        game.state.restart();
+    },*/
 
     preload: function () {
 
@@ -32,7 +55,7 @@ var playState = {
         game.load.image('present1', 'present1.png');
         game.load.image('present2', 'present2.png');
         game.load.image('present3', 'present3.png');
-        game.load.image('platform', 'platform.png');
+        game.load.image('platform', 'trees2.png');
         game.load.image('ground', 'ground.png');
 
         game.load.image('sky', 'sky.png');
@@ -40,26 +63,30 @@ var playState = {
         game.load.spritesheet('snowflakes_large', 'snowflakes_large.png', 64, 64);
 
         game.load.image('baby', 'baby.png');
+
+        game.load.image('cloud1', 'cloud1.png');
+        game.load.image('cloud2', 'cloud2.png');
+        game.load.image('cloud3', 'cloud3.png');
+        game.load.image('cloud4', 'cloud4.png');
+        game.load.image('cloud5', 'cloud5.png');
+
+        game.load.image('house', 'house.png');
+
+        game.load.image('airplane', 'airplane.png');
+        game.load.image('balloon', 'balloon.png');
     },
 
     createMain: function () {
 
         game.add.sprite(0, 0, 'sky');
-        this.player = game.add.sprite(0, 0, 'player');
 
-
-        game.physics.arcade.enable(this.player);
-
-        this.player.body.collideWorldBounds = true;
-        this.player.body.gravity.y = 300;
-
-        this.platforms = game.add.physicsGroup();
-
-        this.platforms.create(265, 0, 'platform');
-        this.platforms.create(535, 80, 'platform');
-
-        this.createPlatform();
-
+        this.clouds = game.add.physicsGroup();
+        this.clouds.create(100, 60, 'cloud1');
+        this.clouds.create(470, 80, 'cloud2');
+        this.clouds.create(320, 150, 'cloud3');
+        this.clouds.create(520, 200, 'cloud4');
+        this.clouds.create(720, 110, 'cloud4');
+        this.clouds.setAll('body.velocity.x', -15);
 
         this.grounds = game.add.physicsGroup();
         // Here we create the ground.
@@ -72,25 +99,101 @@ var playState = {
         //  This stops it from falling away when you jump on it
         ground.body.immovable = true;
 
+
+
+        this.platforms = game.add.physicsGroup();
+
+        //this.platforms.create(100, 540, 'house');
+        //this.platforms.create(265, 0, 'platform');
+        this.platforms.create(265, 230, 'platform');
+        this.platforms.create(535, 230, 'platform');
+        this.platforms.setAll('body.immovable', true);
+        this.platforms.setAll('body.velocity.x', -40);
+
+        //this.createPlatform();
+
+        this.houses = game.add.physicsGroup();
+        this.houses.create(100, 540, 'house');
+        this.houses.setAll('body.immovable', true);
+        this.houses.setAll('body.velocity.x', -40);
+
         this.cursors = game.input.keyboard.createCursorKeys();
         this.prizeButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
 
-        game.add.sprite(0, 0, 'baby');
+        game.add.sprite(10, 10, 'baby');
+        this.scoreLabel = game.add.text(40 , 12, this.score, {font: '20px Arial', fill: '#f00'});
 
 
+        this.player = game.add.sprite(0, 0, 'player');
+        game.physics.arcade.enable(this.player);
+        this.player.body.collideWorldBounds = true;
+        this.player.body.gravity.y = 300;
+
+        this.airplanes = game.add.physicsGroup();
+        this.balloons = game.add.physicsGroup();
+/*
+        game.physics.arcade.collide(this.player, this.platforms);
+        game.physics.arcade.collide(this.player, this.grounds);
+        game.physics.arcade.collide(this.player, this.houses);
+        game.physics.arcade.collide(this.player, this.balloons);
+        game.physics.arcade.collide(this.player, this.airplanes);
+        */
     },
 
 
     createPlatform: function () {
+        this.platforms.create(game.world.width, 230, 'platform');
+/*
         if (this.getRandomInt(0, 1) == 0) {
-            this.platforms.create(game.world.width, 0, 'platform');
+            this.platforms.create(game.world.width, 540, 'house');
+            //this.platforms.create(game.world.width, 0, 'platform'); TODO ispravit
         } else {
-            this.platforms.create(game.world.width, 80, 'platform');
-        }
+            this.platforms.create(game.world.width, 230, 'platform');
+        }*/
+
         this.platforms.setAll('body.immovable', true);
         this.platforms.setAll('body.velocity.x', -40);
+
+        //game.physics.arcade.collide(this.player, this.platforms);
     },
+
+    createHouse: function () {
+        this.houses.create(game.world.width+100, 540, 'house');
+        this.houses.setAll('body.immovable', true);
+        this.houses.setAll('body.velocity.x', -40);
+
+        switch (this.getRandomInt(0, 1)) {
+            case 0:
+                this.createBalloon();
+                break;
+            case 1:
+                this.createAirplane();
+                break;
+            default:
+                this.createAirplane();
+        }
+
+        //game.physics.arcade.collide(this.player, this.houses);
+    },
+
+    createBalloon: function () {
+        this.balloons.create(game.world.width+5, 500, 'balloon');
+        this.balloons.setAll('body.immovable', true);
+        this.balloons.setAll('body.velocity.x', -40);
+        this.balloons.setAll('body.velocity.y', -30);
+
+        //game.physics.arcade.collide(this.player, this.balloons);
+    },
+
+    createAirplane: function () {
+        this.airplanes.create(game.world.width+5, 150, 'airplane');
+        this.airplanes.setAll('body.immovable', true);
+        this.airplanes.setAll('body.velocity.x', -200);
+
+        //game.physics.arcade.collide(this.player, this.airplanes);
+    },
+
 
     // использование Math.round() даст неравномерное распределение!
     getRandomInt: function (min, max) {
@@ -105,7 +208,7 @@ var playState = {
         this.createMain();
         this.createSnow();
 // Create a label to use as a button
-        var pause_label = game.add.text(game.world.width - 100, 10, 'Pause', {font: '24px Arial', fill: '#ff0'});
+        var pause_label = game.add.text(game.world.width - 100, 10, 'Pause', {font: '24px Arial', fill: '#f00'});
         pause_label.inputEnabled = true;
 
         this.pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
@@ -115,7 +218,7 @@ var playState = {
         pause_label.events.onInputUp.add(this.pauseGame);
 
         // Add a input listener that can help us return from being paused
-        game.input.onDown.add(this.unpause, self);
+        //game.input.onDown.add(this.unpause, self);
 
 
     },
@@ -123,6 +226,7 @@ var playState = {
 
     pauseGame: function () {
         game.paused = true;
+        game.input.onDown.add(this.unpause, self);
     },
 
 // And finally the method that handels the pause menu
@@ -184,9 +288,12 @@ var playState = {
 
     playerControls: function () {
 
-
+        /* hz pohodu bez etogo ne rabotaet*/
         game.physics.arcade.collide(this.player, this.platforms);
         game.physics.arcade.collide(this.player, this.grounds);
+        game.physics.arcade.collide(this.player, this.houses);
+        game.physics.arcade.collide(this.player, this.balloons);
+        game.physics.arcade.collide(this.player, this.airplanes);
 
         this.player.body.velocity.x = 40;
 
@@ -231,11 +338,8 @@ var playState = {
 
     updateMain: function () {
         this.playerControls();
-        this.platforms.setAll('body.velocity.x', -40);
-
-        if (this.player.body.touching.right) {
-            this.game_over();
-        }
+        //this.platforms.setAll('body.velocity.x', -40);
+        game.physics.arcade.collide(this.prize, this.houses);
     },
 
     prizeDown: false,
@@ -249,12 +353,21 @@ var playState = {
         } else {
             this.prize = game.add.sprite(this.player.x, this.player.y + 25, 'present3');
         }
+        //this.prize.body.collideWorldBounds = true;
+        /*
         this.platforms.setAll('body.immovable', true);
         this.platforms.setAll('body.velocity.x', -40);
+        */
+        //game.physics.arcade.collide(this.prize, this.houses); TODO collide prize
     },
 
     render: function () {
         this.renderMain();
+        if (this.player.body.touching.right) {
+            this.pauseGame();
+            this.game_over();
+        }
+        this.scoreLabel.text = this.score;
     },
 
     renderMain: function () {
@@ -269,6 +382,25 @@ var playState = {
 
         }
 
+
+        if (this.prize && this.prize.body.touching.down) {
+            this.score++;
+            this.prize.destroy();
+            this.prize = null;
+            this.prizeDown = false
+        }
+
+
+        /* TODO score
+        if (this.prize && this.prize.body.touching) {
+         this.score++;
+         this.prize.destroy();
+         this.prize = null;
+         this.prizeDown = false
+         }
+        */
+
+
         if (this.prize && this.prize.body.onFloor()) {
             this.prize.destroy();
             this.prize = null;
@@ -276,14 +408,59 @@ var playState = {
         }
 
         this.platforms.forEach(function (item) {
-            if (item.x < -64) {
+            if (item.x < -274) {
                 item.destroy();
                 //item.kill();
                 this.platforms.remove(item);
-                this.createPlatform();
+                this.createSwitchItem();
             }
         }, this);
 
+        this.houses.forEach(function (item) {
+            if (item.body.touching.up && !this.prizeDown) {
+                this.player.body.velocity.x = 200;
+                this.player.body.velocity.y = -500;
+            }
+            if (item.x < -70) {
+                item.destroy();
+                //item.kill();
+                this.houses.remove(item);
+                this.createSwitchItem();
+            }
+        }, this);
+
+
+        this.clouds.forEach(function (item) {
+            if (item.x < -70) {
+                item.x = game.world.width;
+            }
+        }, this);
+
+        this.balloons.forEach(function (item) {
+            if (item.x < -70) {
+                item.destroy();
+            }
+        }, this);
+
+        this.airplanes.forEach(function (item) {
+            if (item.x < -70) {
+                item.destroy();
+            }
+        }, this);
+    },
+
+
+    createSwitchItem: function () {
+        switch (this.getRandomInt(0, 1)) {
+            case 0:
+                this.createPlatform();
+                    break;
+            case 1:
+                this.createHouse();
+                    break;
+            default:
+                this.createHouse();
+        }
     },
 
 
@@ -313,5 +490,5 @@ var playState = {
 
         particle.body.velocity.x = max - Math.floor(Math.random() * 30);
 
-    },
+    }
 };

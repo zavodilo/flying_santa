@@ -1,3 +1,7 @@
 var gameOverState = {
-    
+
+    create: function() {
+
+    }
+
 };

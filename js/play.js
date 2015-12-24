@@ -23,26 +23,11 @@ var playState = {
 
     game_over: function () {
         game.paused = true;
-        //alert('GAME OVER!');
-        /*
-        label = game.add.text(game.world.width / 2 ,game.world.height / 2, 'Score: '+score+'\nGAME OVER\nPress SPACE to restart',{ font: '22px Lucida Console', fill: '#fff', align: 'center'});
-        label.anchor.setTo(0.5, 0.5);
-        */
-        //game.state.restart();
-
-        var game_over_label = game.add.text(game.world.width / 2 , game.world.height / 2, 'GAME OVER\nClick to restart\nScore: ' + this.score, {font: '24px Arial', fill: '#f00'});
-        //game_over_label.inputEnabled = true;
-        //game_over_label.events.onInputUp.add(this.restartGame);
-        //this.pauseGame();
+        game.add.text(game.world.width / 2 , game.world.height / 2, 'GAME OVER\nClick to restart\nScore: ' + this.score, {font: '24px Arial', fill: '#f00'});
         game.state.restart();
 
     },
-    /*
-    restartGame: function () {
-        //game.paused = false;
-        //game.state.start('play');
-        game.state.restart();
-    },*/
+
 
     preload: function () {
 
@@ -55,7 +40,9 @@ var playState = {
         game.load.image('present1', 'present1.png');
         game.load.image('present2', 'present2.png');
         game.load.image('present3', 'present3.png');
-        game.load.image('platform', 'trees2.png');
+        game.load.image('trees', 'trees.png');
+        game.load.image('trees2', 'trees2.png');
+        game.load.image('trees3', 'trees3.png');
         game.load.image('ground', 'ground.png');
 
         game.load.image('sky', 'sky.png');
@@ -74,9 +61,21 @@ var playState = {
 
         game.load.image('airplane', 'airplane.png');
         game.load.image('balloon', 'balloon.png');
+
+        game.load.image('elf', 'elf.png');
+        game.load.image('pyramid', 'pyramid.png');
+        game.load.image('pysan', 'pysan.png');
+        game.load.image('kreml', 'kreml.png');
+        game.load.image('palace', 'palace.png');
+        game.load.image('amer', 'amer.png');
+        game.load.image('engl', 'engl.png');
+        game.load.image('china', 'china.png');
+        game.load.image('christ', 'christ.png');
+
     },
 
     createMain: function () {
+        this.score = 0;
 
         game.add.sprite(0, 0, 'sky');
 
@@ -103,14 +102,13 @@ var playState = {
 
         this.platforms = game.add.physicsGroup();
 
-        //this.platforms.create(100, 540, 'house');
-        //this.platforms.create(265, 0, 'platform');
-        this.platforms.create(265, 230, 'platform');
-        this.platforms.create(535, 230, 'platform');
+
+        this.platforms.create(265, 230, 'trees2');
+        this.platforms.create(535, 230, 'trees2');
         this.platforms.setAll('body.immovable', true);
         this.platforms.setAll('body.velocity.x', -40);
 
-        //this.createPlatform();
+
 
         this.houses = game.add.physicsGroup();
         this.houses.create(100, 540, 'house');
@@ -132,34 +130,66 @@ var playState = {
 
         this.airplanes = game.add.physicsGroup();
         this.balloons = game.add.physicsGroup();
-/*
-        game.physics.arcade.collide(this.player, this.platforms);
-        game.physics.arcade.collide(this.player, this.grounds);
-        game.physics.arcade.collide(this.player, this.houses);
-        game.physics.arcade.collide(this.player, this.balloons);
-        game.physics.arcade.collide(this.player, this.airplanes);
-        */
+
     },
 
 
     createPlatform: function () {
-        this.platforms.create(game.world.width, 230, 'platform');
-/*
-        if (this.getRandomInt(0, 1) == 0) {
-            this.platforms.create(game.world.width, 540, 'house');
-            //this.platforms.create(game.world.width, 0, 'platform'); TODO ispravit
-        } else {
-            this.platforms.create(game.world.width, 230, 'platform');
-        }*/
+        switch (this.getRandomInt(0, 1)) {
+            case 0:
+                this.platforms.create(game.world.width, 230, 'trees2');
+                break;
+            case 1:
+                this.platforms.create(game.world.width, 380, 'trees3');
+                break;
+            default:
+                this.platforms.create(game.world.width, 230, 'trees2');
+        }
+        //this.platforms.create(game.world.width, 230, 'trees2');
+
 
         this.platforms.setAll('body.immovable', true);
         this.platforms.setAll('body.velocity.x', -40);
 
-        //game.physics.arcade.collide(this.player, this.platforms);
+
     },
 
     createHouse: function () {
-        this.houses.create(game.world.width+100, 540, 'house');
+        switch (this.getRandomInt(0, 20)) {
+            case 0:
+                this.houses.create(game.world.width+100, 540, 'house');
+                break;
+            case 1:
+                this.houses.create(game.world.width+100, 500, 'elf');
+                break;
+            case 2:
+                this.houses.create(game.world.width+100, 522, 'pyramid');
+                break;
+            case 3:
+                this.houses.create(game.world.width+100, 503, 'pysan');
+                break;
+            case 4:
+                this.houses.create(game.world.width+100, 503, 'kreml');
+                break;
+            case 5:
+                this.houses.create(game.world.width+100, 493, 'palace');
+                break;
+            case 6:
+                this.houses.create(game.world.width+100, 488, 'amer');
+                break;
+            case 7:
+                this.houses.create(game.world.width+100, 490, 'engl');
+                break;
+            case 8:
+                this.houses.create(game.world.width+100, 495, 'china');
+                break;
+            case 9:
+                this.houses.create(game.world.width+100, 490, 'christ');
+                break;
+            default:
+                this.houses.create(game.world.width+100, 540, 'house');
+        }
+        //this.houses.create(game.world.width+100, 540, 'house');
         this.houses.setAll('body.immovable', true);
         this.houses.setAll('body.velocity.x', -40);
 
@@ -174,7 +204,7 @@ var playState = {
                 this.createAirplane();
         }
 
-        //game.physics.arcade.collide(this.player, this.houses);
+
     },
 
     createBalloon: function () {
@@ -183,7 +213,7 @@ var playState = {
         this.balloons.setAll('body.velocity.x', -40);
         this.balloons.setAll('body.velocity.y', -30);
 
-        //game.physics.arcade.collide(this.player, this.balloons);
+
     },
 
     createAirplane: function () {
@@ -191,7 +221,7 @@ var playState = {
         this.airplanes.setAll('body.immovable', true);
         this.airplanes.setAll('body.velocity.x', -200);
 
-        //game.physics.arcade.collide(this.player, this.airplanes);
+
     },
 
 
@@ -205,6 +235,8 @@ var playState = {
 
     create: function () {
 
+
+
         this.createMain();
         this.createSnow();
 // Create a label to use as a button
@@ -213,34 +245,23 @@ var playState = {
 
         this.pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
         this.pauseKey.onDown.add(this.pauseGame, this);
-        //pause.onInputUp.add(pause, this);
 
         pause_label.events.onInputUp.add(this.pauseGame);
-
-        // Add a input listener that can help us return from being paused
-        //game.input.onDown.add(this.unpause, self);
-
-
+        game.input.onDown.add(this.unpause, self);
     },
 
 
     pauseGame: function () {
         game.paused = true;
-        game.input.onDown.add(this.unpause, self);
+
     },
 
 // And finally the method that handels the pause menu
     unpause: function (event) {
         // Only act if paused
         if (game.paused) {
-
-            // Remove the menu and the label
-            //menu.destroy();
-            //choiseLabel.destroy();
-
             // Unpause the game
             game.paused = false;
-
         }
     },
 
@@ -353,12 +374,7 @@ var playState = {
         } else {
             this.prize = game.add.sprite(this.player.x, this.player.y + 25, 'present3');
         }
-        //this.prize.body.collideWorldBounds = true;
-        /*
-        this.platforms.setAll('body.immovable', true);
-        this.platforms.setAll('body.velocity.x', -40);
-        */
-        //game.physics.arcade.collide(this.prize, this.houses); TODO collide prize
+
     },
 
     render: function () {
@@ -391,21 +407,8 @@ var playState = {
         }
 
 
-        /* TODO score
-        if (this.prize && this.prize.body.touching) {
-         this.score++;
-         this.prize.destroy();
-         this.prize = null;
-         this.prizeDown = false
-         }
-        */
 
 
-        if (this.prize && this.prize.body.onFloor()) {
-            this.prize.destroy();
-            this.prize = null;
-            this.prizeDown = false
-        }
 
         this.platforms.forEach(function (item) {
             if (item.x < -274) {
@@ -417,9 +420,9 @@ var playState = {
         }, this);
 
         this.houses.forEach(function (item) {
-            if (item.body.touching.up && !this.prizeDown) {
+            if (item.body.touching.up && !this.prizeDown && !this.prize) { //TODO починить баг
                 this.player.body.velocity.x = 200;
-                this.player.body.velocity.y = -500;
+                this.player.body.velocity.y = -300;
             }
             if (item.x < -70) {
                 item.destroy();
@@ -428,6 +431,13 @@ var playState = {
                 this.createSwitchItem();
             }
         }, this);
+
+
+        if (this.prize && this.prize.body.onFloor()) {
+            this.prize.destroy();
+            this.prize = null;
+            this.prizeDown = false
+        }
 
 
         this.clouds.forEach(function (item) {
